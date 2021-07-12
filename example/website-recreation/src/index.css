@@ -53,3 +53,16 @@ hr{
 .form{
   flex: 1;
 }
+
+.container{
+  display: flex;
+}
+
+.instructions{
+  flex: 2;
+  margin-left: 10px;
+}
+
+.form{
+  flex: 1;
+}
