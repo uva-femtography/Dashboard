@@ -4,8 +4,8 @@ import { Card, FormGroup, HTMLSelect, NumericInput, Button, ButtonGroup } from '
 function Home(){
     let gpdOptions:string[] = ["GPD_E", "GPD_H"];
     let modelOptions:string[] = ["BKM Model", "UVA Model"];
-    let xbjOptions:number[] = [0.0001, 0.0002, 0.0004, 0.0006, 0.0008, 0.001, 0.002, 0.004, 0.006, 0.008, 0.01, 0.02, 0.04, 0.06, 0.08, 0.1, 0.2, 0.4, 0.6]
-    let tOptions:number[] = [-0.1, -0.2, -0.3, -0.4, -0.5, -0.6, -0.7, -0.8, -0.9, -1.0, -1.1, -1.2, -1.3, -1.4, -1.5, -1.6, -1.7, -1.8, -1.9]
+    let xbjOptions:number[] = [0.0001, 0.0002, 0.0004, 0.0006, 0.0008, 0.001, 0.002, 0.004, 0.006, 0.008, 0.01, 0.02, 0.04, 0.06, 0.08, 0.1, 0.2, 0.4, 0.6];
+    let tOptions:number[] = [...Array(19).keys()].map(n => -(n + 1) / 10);
 
 
 
