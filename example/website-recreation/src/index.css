@@ -36,7 +36,6 @@ hr{
   max-width: 40%;
   float: left;
 }
-
 .instructions{
   float: left;
   margin-left: 10px;
@@ -55,5 +54,15 @@ hr{
   flex: 1;
 }
 
+.container{
+  display: flex;
+}
 
+.instructions{
+  flex: 2;
+  margin-left: 10px;
+}
 
+.form{
+  flex: 1;
+}
