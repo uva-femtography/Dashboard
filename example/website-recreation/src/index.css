@@ -31,14 +31,28 @@ hr{
   margin-right: auto;
 }
 
+/*
 .form{
-  max-width: 500px;
+  max-width: 40%;
   float: left;
 }
 
 .instructions{
   float: left;
   margin-left: 10px;
+}*/
+
+.container{
+  display: flex;
+}
+
+.instructions{
+  flex: 2;
+  margin-left: 10px;
+}
+
+.form{
+  flex: 1;
 }
 
 

@@ -13,55 +13,56 @@ function Home(){
         <div className="content">
             <h1>FemtoNet GPD Model Plotting App</h1>
             <hr />
-            <div className="form">
-                <Card>
-                    <form>
-                        <FormGroup label="Select GPD:" labelFor="GPD">
-                            <HTMLSelect options={gpdOptions} name="GPD" />
-                        </FormGroup>
-                        <FormGroup label="Select a model:" labelFor="model">
-                            <HTMLSelect options={modelOptions} name="model"/>
-                        </FormGroup>
+            <div className="container">
+                <div className="form">
+                    <Card>
+                        <form>
+                            <FormGroup label="Select GPD:" labelFor="GPD">
+                                <HTMLSelect options={gpdOptions} name="GPD" />
+                            </FormGroup>
+                            <FormGroup label="Select a model:" labelFor="model">
+                                <HTMLSelect options={modelOptions} name="model"/>
+                            </FormGroup>
 
-                        <h2>Kinematic Parameters</h2>
+                            <h2>Kinematic Parameters</h2>
 
-                        <FormGroup label="xbj:" labelFor="xbj">
-                            <HTMLSelect options={xbjOptions} name="xbj" />
-                        </FormGroup>
+                            <FormGroup label="xbj:" labelFor="xbj">
+                                <HTMLSelect options={xbjOptions} name="xbj" />
+                            </FormGroup>
 
-                        <FormGroup label="t:" labelFor="t">
-                            <HTMLSelect options={tOptions} name="t"/>
-                         </FormGroup>
-                        
-                        <FormGroup label="q2:" labelFor="q2">
-                            <NumericInput stepSize={0.1} name="q2" placeholder="Input a number"/>
-                        </FormGroup>
+                            <FormGroup label="t:" labelFor="t">
+                                <HTMLSelect options={tOptions} name="t"/>
+                            </FormGroup>
+                            
+                            <FormGroup label="q2:" labelFor="q2">
+                                <NumericInput stepSize={0.1} name="q2" placeholder="Input a number"/>
+                            </FormGroup>
 
-                        <ButtonGroup>
-                            <Button icon={"series-configuration"} text="Plot" />
-                            <Button icon={"download"} text="Download as CSV" />
-                        </ButtonGroup>
-                    </form>
-                </Card>
-            </div>
+                            <ButtonGroup>
+                                <Button icon={"series-configuration"} text="Plot" />
+                                <Button icon={"download"} text="Download as CSV" />
+                            </ButtonGroup>
+                        </form>
+                    </Card>
+                </div>
 
-            <div className="instructions">
-                <h2>Instructions</h2>
-                <ul>
-                    <li>Pick the GPD of interest from the dropdown menu.</li>
-                    <li>Pick the theoretical model.</li>
-                </ul>
+                <div className="instructions">
+                    <h2>Instructions</h2>
+                    <ul>
+                        <li>Pick the GPD of interest from the dropdown menu.</li>
+                        <li>Pick the theoretical model.</li>
+                    </ul>
 
-                <h2>Explanation of Grid Parameters</h2>
-                <ul>
-                    <li>Choose kinematical parameters from the dropdown boxes. These are auto generated according to the gird points.</li>
-                    <li>Choose Q2 values to estimate.</li>
-                    <li>To download the results grid pick 'Download model as CSV' or press plot to generate interactive plot of the up(down) quark GPD versus x.</li>
-                </ul>
+                    <h2>Explanation of Grid Parameters</h2>
+                    <ul>
+                        <li>Choose kinematical parameters from the dropdown boxes. These are auto generated according to the gird points.</li>
+                        <li>Choose Q2 values to estimate.</li>
+                        <li>To download the results grid pick 'Download model as CSV' or press plot to generate interactive plot of the up(down) quark GPD versus x.</li>
+                    </ul>
 
+                </div>
             </div>
             
-
         </div>
     );
     
