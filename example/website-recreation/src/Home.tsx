@@ -51,12 +51,12 @@ function Home() {
 
         fetch(url)
             .then(response => response.json())
-            .then(data => setData(data));
-
-        //sets data to local storage
-        //If there is already an item in data, will overwrite
-        localStorage.setItem('data', JSON.stringify(data));
-
+            .then(data => {
+                setData(data);
+                localStorage.setItem('data', JSON.stringify(data));
+            });
+        
+        
         setShowInstructions(false);
 
         //stop reloading
