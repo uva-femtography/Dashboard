@@ -1,7 +1,8 @@
 import { BaseSyntheticEvent, useState } from 'react';
 import { Card, FormGroup, HTMLSelect, NumericInput, Button, ButtonGroup } from '@blueprintjs/core';
+import Results from './Results';
 
-interface Options {
+export interface Options {
     //Line 6 allows for strings to be used as indexes
     [index: number]: string;
     gpd: string;
@@ -9,8 +10,6 @@ interface Options {
     xbj: number;
     t: number;
     q2: number;
-
-
 }
 
 
@@ -21,6 +20,7 @@ function Home() {
     let tOptions: number[] = [...Array(19).keys()].map(n => -(n + 1) / 10);
 
     const [options, setOptions] = useState<Options>({ gpd: "GPD_E", model: "BKM Model", xbj: 0.001, t: -0.1, q2: 0.1 })
+    const [data, setData ] = useState(null); 
 
     /**
      * This function is used for all form fields. It updates the state with
@@ -47,16 +47,13 @@ function Home() {
 
         fetch(url)
             .then(response => response.json())
-            .then(data => console.log(data))
-
+            .then(data => setData(data));
+        
+        localStorage.setData('data', data);
+        
 
         event.preventDefault();
     }
-
-
-
-
-
 
     return (
         <div className="content">
@@ -97,7 +94,10 @@ function Home() {
                 </div>
 
                 <div className="instructions">
-                    <h2>Instructions</h2>
+                    
+                    <Results />
+
+                   {/*<h2>Instructions</h2>
                     <ul>
                         <li>Pick the GPD of interest from the dropdown menu.</li>
                         <li>Pick the theoretical model.</li>
@@ -108,8 +108,8 @@ function Home() {
                         <li>Choose kinematical parameters from the dropdown boxes. These are auto generated according to the gird points.</li>
                         <li>Choose Q2 values to estimate.</li>
                         <li>To download the results grid pick 'Download model as CSV' or press plot to generate interactive plot of the up(down) quark GPD versus x.</li>
-                    </ul>
-
+                   </ul> */}
+                    
                 </div>
 
                 </div>
