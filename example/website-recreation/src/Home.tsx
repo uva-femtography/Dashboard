@@ -1,6 +1,7 @@
-import { BaseSyntheticEvent, useState } from 'react';
+import { BaseSyntheticEvent, useState, useEffect } from 'react';
 import { Card, FormGroup, HTMLSelect, NumericInput, Button, ButtonGroup } from '@blueprintjs/core';
 import Results from './Results';
+import Instructions from './Instructions';
 
 export interface Options {
     //Line 6 allows for strings to be used as indexes
@@ -20,7 +21,10 @@ function Home() {
     let tOptions: number[] = [...Array(19).keys()].map(n => -(n + 1) / 10);
 
     const [options, setOptions] = useState<Options>({ gpd: "GPD_E", model: "BKM Model", xbj: 0.001, t: -0.1, q2: 0.1 })
-    const [data, setData ] = useState(null); 
+    //data will hold data from the API
+    const [data, setData] = useState([{ x: 0, u: 0, d: 0, xu: 0, xd: 0 }]);
+    //boolean that specifies whether or not to show instructions for the web app
+    const [showInstructions, setShowInstructions] = useState(true);
 
     /**
      * This function is used for all form fields. It updates the state with
@@ -48,12 +52,25 @@ function Home() {
         fetch(url)
             .then(response => response.json())
             .then(data => setData(data));
-        
-        localStorage.setData('data', data);
-        
 
+        //sets data to local storage
+        //If there is already an item in data, will overwrite
+        localStorage.setItem('data', JSON.stringify(data));
+
+        setShowInstructions(false);
+
+        //stop reloading
         event.preventDefault();
     }
+
+    useEffect(() => {
+        let data = localStorage.getItem('data');
+        if (data != null) {
+            setShowInstructions(false);
+            //Will turn string back into JSON
+            setData(JSON.parse(data));
+        }
+    }, [])
 
     return (
         <div className="content">
@@ -93,27 +110,13 @@ function Home() {
                     </Card>
                 </div>
 
-                <div className="instructions">
-                    
-                    <Results />
+                {/*If there isn't any data found in local storage, instructions will show.
+                Otherwise, Results will show */}
+                {showInstructions && (<Instructions />)}
+                {!showInstructions && (<Results data={data} />)}
 
-                   {/*<h2>Instructions</h2>
-                    <ul>
-                        <li>Pick the GPD of interest from the dropdown menu.</li>
-                        <li>Pick the theoretical model.</li>
-                    </ul>
-
-                    <h2>Explanation of Grid Parameters</h2>
-                    <ul>
-                        <li>Choose kinematical parameters from the dropdown boxes. These are auto generated according to the gird points.</li>
-                        <li>Choose Q2 values to estimate.</li>
-                        <li>To download the results grid pick 'Download model as CSV' or press plot to generate interactive plot of the up(down) quark GPD versus x.</li>
-                   </ul> */}
-                    
-                </div>
-
-                </div>
             </div>
+        </div>
 
     );
 
