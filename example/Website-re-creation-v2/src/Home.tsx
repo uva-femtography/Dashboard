@@ -124,6 +124,7 @@ function Home() {
 
   function handleButtonClick() {
     //Adds new tab to dashboard displaying results
+
     setIndex(index + 1);
     let newNodeJson = {
       type: "tab",
