@@ -6,12 +6,11 @@ import {
   NumericInput,
   Button,
   ButtonGroup,
+  Spinner,
 } from "@blueprintjs/core";
 import Results from "./Results";
-import FlexLayout, {
-  DockLocation,
-  IJsonModel,
-} from "flexlayout-react";
+import FlexLayout, { DockLocation, IJsonModel } from "flexlayout-react";
+import createPlot from './CreatePlot';
 
 export interface Options {
   //Line 6 allows for strings to be used as indexes
@@ -57,6 +56,9 @@ function Home() {
 
   const [index, setIndex] = useState(0);
 
+  //Whether to show the spinner or not
+  const [showSpinner, setShowSpinner] = useState(false);
+
   //Configuration for the dashboard using flex layout
   let json: IJsonModel = {
     global: {
@@ -98,6 +100,8 @@ function Home() {
   }
 
   function handleSubmit(event: BaseSyntheticEvent) {
+    setShowSpinner(true);
+
     const baseURL = "http://localhost:5000/";
     let model: string;
     if (options.model === "BKM Model") {
@@ -108,6 +112,8 @@ function Home() {
 
     //REMOVE: Currently hardcoded to UVA because BKM is not working
     const url = `${baseURL}api/uva/${options.gpd}/${options.xbj}/${options.t}/${options.q2}`;
+
+    console.log(url);
 
     fetch(url)
       .then((response) => response.json())
@@ -136,6 +142,10 @@ function Home() {
     config.doAction(
       FlexLayout.Actions.addNode(newNodeJson, "1", DockLocation.LEFT, 0)
     );
+
+    createPlot(index, apiData[index]);
+
+    setShowSpinner(false);
   }
 
   return (
@@ -202,6 +212,7 @@ function Home() {
                   onClick={handleSubmit}
                 />
                 <Button icon={"download"} text="Download as CSV" />
+                {showSpinner && <Spinner size={20} />}
               </ButtonGroup>
             </form>
           </Card>

@@ -5,7 +5,6 @@ type TableProps = {
     data: Array<DataPoint>;
 }
 
-
 function Table({ data }: TableProps) {
     return (
         <div className="table">
