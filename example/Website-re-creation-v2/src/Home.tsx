@@ -7,10 +7,11 @@ import {
   Button,
   ButtonGroup,
   Spinner,
+  Toast,
 } from "@blueprintjs/core";
 import Results from "./Results";
 import FlexLayout, { DockLocation, IJsonModel } from "flexlayout-react";
-import createPlot from './CreatePlot';
+import createPlot from "./CreatePlot";
 
 export interface Options {
   //Line 6 allows for strings to be used as indexes
@@ -69,17 +70,18 @@ function Home() {
     layout: {
       type: "row",
       id: "0",
+      weight: 100,
       children: [
         {
           type: "tabset",
           id: "1",
-          weight: 10,
           selected: 0,
           children: [
             {
               type: "tab",
               name: "Instructions",
               component: "Instructions",
+              id: "instructions",
             },
           ],
         },
@@ -113,8 +115,6 @@ function Home() {
     //REMOVE: Currently hardcoded to UVA because BKM is not working
     const url = `${baseURL}api/uva/${options.gpd}/${options.xbj}/${options.t}/${options.q2}`;
 
-    console.log(url);
-
     fetch(url)
       .then((response) => response.json())
       .then((data) => {
@@ -122,7 +122,7 @@ function Home() {
         updatedData.push(data);
         setApiData(updatedData);
         handleButtonClick();
-      });
+      })
 
     //stop reloading
     event.preventDefault();
@@ -131,16 +131,26 @@ function Home() {
   function handleButtonClick() {
     //Adds new tab to dashboard displaying results
 
+    if (index === 0) {
+      config.doAction(FlexLayout.Actions.deleteTab("instructions"));
+    }
+
     setIndex(index + 1);
+
+    /**
+     * type: "tab",
+      name: `Results ${index}`,
+      component: "grid",
+     */
+
     let newNodeJson = {
       type: "tab",
       name: `Results ${index}`,
-      weight: 10,
       component: "grid",
     };
 
     config.doAction(
-      FlexLayout.Actions.addNode(newNodeJson, "1", DockLocation.LEFT, 0)
+      FlexLayout.Actions.addNode(newNodeJson, "0", DockLocation.BOTTOM, 0)
     );
 
     createPlot(index, apiData[index]);
@@ -150,6 +160,7 @@ function Home() {
 
   return (
     <div className="content">
+
       <h1>FemtoNet GPD Model Plotting App</h1>
       <hr />
 
