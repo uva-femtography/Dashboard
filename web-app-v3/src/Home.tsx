@@ -9,7 +9,7 @@ import {
   Spinner,
 } from "@blueprintjs/core";
 import Results from "./Results";
-import FlexLayout, { DockLocation, IJsonModel } from "flexlayout-react";
+import FlexLayout, { IJsonModel } from "flexlayout-react";
 import createPlot from "./CreatePlot";
 
 export interface Options {
@@ -54,22 +54,23 @@ function Home() {
   //data will hold data from the API
   const [apiData, setApiData] = useState<APIData[]>([]);
 
-  const [index, setIndex] = useState(0);
-
   //Whether to show the spinner or not
   const [showSpinner, setShowSpinner] = useState(false);
 
   //Configuration for the dashboard using flex layout
+  //NOTE: Move to Results if not needed
   let json: IJsonModel = {
     global: {
       tabEnableClose: true,
       tabEnableRename: true,
     },
-    borders: [{
-      type: 'border',
-      location: 'left',
-      children: [],
-    }],
+    borders: [
+      {
+        type: "border",
+        location: "left",
+        children: [],
+      },
+    ],
     layout: {
       type: "row",
       id: "0",
@@ -125,45 +126,31 @@ function Home() {
         updatedData.push(data);
         setApiData(updatedData);
         handleButtonClick();
-      })
+      });
 
     //stop reloading
     event.preventDefault();
   }
 
   function handleButtonClick() {
-    //Adds new tab to dashboard displaying results
-
-    if (index === 0) {
-      config.doAction(FlexLayout.Actions.deleteTab("instructions"));
+    //Gets the selected tab
+    let tabSelected = sessionStorage.getItem("tab");
+    if (tabSelected === null) {
+      console.log("Error! No tab selected");
+    } else if (tabSelected === "instructions") {
+      console.log("Cannot plot on instructions tab!");
+    } else {
+      /*Tab id will be in the form Results-<id number>
+        Id number will be converted to a integer for the index
+      */
+      let index = parseInt(tabSelected.charAt(tabSelected.length - 1));
+      createPlot(index, apiData[index]);  
     }
-
-    setIndex(index + 1);
-
-    /**
-     * type: "tab",
-      name: `Results ${index}`,
-      component: "grid",
-     */
-
-    let newNodeJson = {
-      type: "tab",
-      name: `Results ${index}`,
-      component: "grid",
-    };
-
-    config.doAction(
-      FlexLayout.Actions.addNode(newNodeJson, "0", DockLocation.RIGHT, 0)
-    );
-
-    createPlot(index, apiData[index]);
-
     setShowSpinner(false);
   }
 
   return (
     <div className="content">
-
       <h1>FemtoNet GPD Model Plotting App</h1>
       <hr />
 

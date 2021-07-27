@@ -1,10 +1,15 @@
 import Plotly from 'plotly.js';
 import { Data } from 'plotly.js';
 import { APIData } from './Home';
-import { DataPoint } from './Home';
 
 
 export default function createPlot(index: number, point: APIData) {
+
+  let element = document.getElementById(`results-${index}`);
+  if(element == null){
+    return false;
+  }
+
   let x: number[] = [];
   let y1: number[] = [];
   let y2: number[] = [];
@@ -46,7 +51,7 @@ export default function createPlot(index: number, point: APIData) {
 
   var config = {responsive: true};
 
+  
+  
   Plotly.newPlot(`results-${index}`, data, layout, config)
-
-
 }
