@@ -150,7 +150,7 @@ function Home() {
     };
 
     config.doAction(
-      FlexLayout.Actions.addNode(newNodeJson, "0", DockLocation.BOTTOM, 0)
+      FlexLayout.Actions.addNode(newNodeJson, "0", DockLocation.RIGHT, 0)
     );
 
     createPlot(index, apiData[index]);

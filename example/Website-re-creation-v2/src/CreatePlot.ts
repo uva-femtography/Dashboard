@@ -16,6 +16,7 @@ export default function createPlot(index: number, point: APIData) {
 
   let trace1: Data = {
     type: 'scatter',
+    mode: 'lines',
     x: x,
     y: y1,
     name: 'GPD Up',
@@ -27,6 +28,7 @@ export default function createPlot(index: number, point: APIData) {
 
   let trace2: Data = {
     type: 'scatter',
+    mode: 'lines',
     x: x,
     y: y2,
     name: 'GPD Down',
@@ -44,7 +46,7 @@ export default function createPlot(index: number, point: APIData) {
     height: 400,
     font: {size: 12},
     yaxis: {
-      title: 'GPD'
+      title: 'GPD',
     },
   };
 
