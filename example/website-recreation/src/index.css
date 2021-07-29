@@ -31,18 +31,36 @@ hr{
   margin-right: auto;
 }
 
-/*
-.form{
-  max-width: 40%;
-  float: left;
-}
-.instructions{
-  float: left;
-  margin-left: 10px;
-}*/
 
 .container{
   display: flex;
+}
+
+.instructions{
+  flex: 2;
+  margin-left: 10px;
+  flex-grow: 2;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  position: relative;
+}
+
+.form{
+  flex: 1;
+}
+
+.container{
+  display: flex;
+}
+
+.results{
+  flex: 2;
+  margin-left: 10px;
+  box-shadow: 0 0 0 1px rgb(16 22 26 / 15%), 0 0 0 rgb(16 22 26 / 0%), 0 0 0 rgb(16 22 26 / 0%);
+  border-radius: 3px;
+  position: relative;
 }
 
 .instructions{
@@ -54,15 +72,27 @@ hr{
   flex: 1;
 }
 
-.container{
-  display: flex;
+.simple_table {
+  background-color: white;
+  color: #333;
+  border-collapse: collapse;
 }
 
-.instructions{
-  flex: 2;
-  margin-left: 10px;
+.simple_table th {
+  background-color: #e0e0e0;
+  border-right: 1px solid #ddd;
+  padding:4px;
+  border-bottom-color: transparent;
+  text-align: left;
+  width:100px;
+  min-width: 100px;
 }
 
-.form{
-  flex: 1;
+.simple_table td {
+  border-right: 1px solid #ddd;
+  border-bottom-color: transparent;
+  padding:4px;
 }
+.simple_table tr:nth-child(even) {background: #f0f0f0}
+.simple_table tr:nth-child(odd) {background: white}
+

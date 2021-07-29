@@ -1,7 +1,9 @@
-import { BaseSyntheticEvent, useState } from 'react';
+import { BaseSyntheticEvent, useState, useEffect } from 'react';
 import { Card, FormGroup, HTMLSelect, NumericInput, Button, ButtonGroup } from '@blueprintjs/core';
+import Results from './Results';
+import Instructions from './Instructions';
 
-interface Options {
+export interface Options {
     //Line 6 allows for strings to be used as indexes
     [index: number]: string;
     gpd: string;
@@ -9,8 +11,6 @@ interface Options {
     xbj: number;
     t: number;
     q2: number;
-
-
 }
 
 
@@ -21,6 +21,10 @@ function Home() {
     let tOptions: number[] = [...Array(19).keys()].map(n => -(n + 1) / 10);
 
     const [options, setOptions] = useState<Options>({ gpd: "GPD_E", model: "BKM Model", xbj: 0.001, t: -0.1, q2: 0.1 })
+    //data will hold data from the API
+    const [data, setData] = useState(null);
+    //boolean that specifies whether or not to show instructions for the web app
+    // const [showInstructions, setShowInstructions] = useState(true);
 
     /**
      * This function is used for all form fields. It updates the state with
@@ -47,16 +51,27 @@ function Home() {
 
         fetch(url)
             .then(response => response.json())
-            .then(data => console.log(data))
+            .then(data => {
+                setData(data);
+                localStorage.setItem('data', JSON.stringify(data));
+            });
 
 
+        //setShowInstructions(false);
+
+        //stop reloading
         event.preventDefault();
     }
 
-
-
-
-
+    /* REMOVE IF NOT NECESSARY
+    useEffect(() => {
+        let data = localStorage.getItem('data');
+        if (data != null) {
+            setShowInstructions(false);
+            //Will turn string back into JSON
+            setData(JSON.parse(data));
+        }
+    }, [])*/
 
     return (
         <div className="content">
@@ -96,24 +111,10 @@ function Home() {
                     </Card>
                 </div>
 
-                <div className="instructions">
-                    <h2>Instructions</h2>
-                    <ul>
-                        <li>Pick the GPD of interest from the dropdown menu.</li>
-                        <li>Pick the theoretical model.</li>
-                    </ul>
+                <Results />
 
-                    <h2>Explanation of Grid Parameters</h2>
-                    <ul>
-                        <li>Choose kinematical parameters from the dropdown boxes. These are auto generated according to the gird points.</li>
-                        <li>Choose Q2 values to estimate.</li>
-                        <li>To download the results grid pick 'Download model as CSV' or press plot to generate interactive plot of the up(down) quark GPD versus x.</li>
-                    </ul>
-
-                </div>
-
-                </div>
             </div>
+        </div>
 
     );
 
