@@ -7,9 +7,15 @@ import {
   Button,
   ButtonGroup,
   Spinner,
+  Toaster,
+  Position,
 } from "@blueprintjs/core";
 import Results from "./Results";
 import createPlot from "./CreatePlot";
+
+const AppToaster = Toaster.create({
+  position: Position.TOP,
+});
 
 export interface Options {
   //Line 6 allows for strings to be used as indexes
@@ -33,7 +39,6 @@ export type DataPoint = {
 export type APIData = Array<DataPoint>;
 
 function Home() {
-  //Note: consider making options a separate component
   //Options
   let gpdOptions: string[] = ["GPD_E", "GPD_H"];
   let modelOptions: string[] = ["BKM Model", "UVA Model"];
@@ -54,7 +59,6 @@ function Home() {
   //data will hold data from the API
   const [apiData, setApiData] = useState<APIData[][]>([[]]);
 
-
   //Whether to show the spinner or not
   const [showSpinner, setShowSpinner] = useState(false);
 
@@ -74,17 +78,16 @@ function Home() {
 
     //If tab selected was invalid, stop executing
     const tabSelected = getTabSelected();
-    if(tabSelected == null){
+    if (tabSelected == null) {
       return;
-    }
-    else if(tabSelected === apiData.length){
+    } else if (tabSelected === apiData.length) {
       let addTabData = apiData;
       addTabData.push([]);
     }
 
     setShowSpinner(true);
 
-    const baseURL = "http://localhost:5000/";
+    const baseURL = "http://femtography.uvadcos.io/";
     let model: string;
     if (options.model === "BKM Model") {
       model = "bkm";
@@ -93,7 +96,7 @@ function Home() {
     }
 
     //REMOVE: Currently hardcoded to UVA because BKM is not working
-    const url = `${baseURL}api/uva/${options.gpd}/${options.xbj}/${options.t}/${options.q2}`;
+    const url = `${baseURL}api/${model}/${options.gpd}/${options.xbj}/${options.t}/${options.q2}`;
 
     fetch(url)
       .then((response) => response.json())
@@ -103,35 +106,42 @@ function Home() {
         setApiData(updatedData);
         console.log(apiData);
         handleButtonClick(tabSelected);
+      })
+      .catch((error) => {
+        showError("Error: Data not found");
+        setShowSpinner(false);
+        return;
       });
-
   }
 
-  function getTabSelected(){
+  function showError(message: string) {
+    AppToaster.show({ message: message, intent: "danger" });
+  }
+
+  function getTabSelected() {
     let tabSelected = sessionStorage.getItem("tab");
 
     //If the tab selected is in valid, i.e. whether if the tab is null or if the
     //tab selected is instructions
     if (tabSelected === null) {
-      console.log("Error! No tab selected");
+      showError("Error: No Tab Selected");
       return null;
     } else if (tabSelected === "instructions") {
-      console.log("Cannot plot on instructions tab!");
+      showError("Error: Cannot plot on instructions");
       return null;
     }
-    
+
     let index = parseInt(tabSelected.charAt(tabSelected.length - 1));
-    if(document.getElementById(`results-${index}`) === null){
-      console.log("Error! No tab selected");
+    if (document.getElementById(`results-${index}`) === null) {
+      AppToaster.show({ message: "Error: No Tab Selected", intent: "danger" });
       return null;
     }
 
     return index;
   }
-  
 
   function handleButtonClick(tabSelected: number) {
-    createPlot(tabSelected, apiData[tabSelected]);  
+    createPlot(tabSelected, apiData[tabSelected]);
     setShowSpinner(false);
   }
 
@@ -204,6 +214,8 @@ function Home() {
             </form>
           </Card>
         </div>
+
+        <div className="break"></div>
 
         <Results />
       </div>
