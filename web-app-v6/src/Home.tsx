@@ -58,10 +58,19 @@ function Home() {
     q2: 0.1,
   });
 
-  //ApiData will hold data from the API for plotting
+  /**
+   * ApiData will hold data from the API for plottingAPI Data is an array of arrays. 
+   * Each element of the outermost array represent the data that is meant to be 
+   * graphed in one tab.
+   */
   const [apiData, setApiData] = useState<APIData[][]>([[]]);
 
-  //downloadData holds data from the API for downloading into a CSV file
+  /**
+   * 
+   * downloadData holds data from the API for downloading into a CSV filedownloadData is different from apiData because it only is concerned with one
+   * set of data points retrieved from the API, whereas apiData has to hold data
+   * for multiple plots and tabs.
+  */
   const [downloadData, setDownloadData] = useState([{}]);
   const [downloadLink, showDownloadLink] = useState(false);
 
@@ -93,7 +102,7 @@ function Home() {
    * Called whenever the user makes a change to these two dropdowns
    * The function calls modModel which will update the dropdown values
    * for xbj, t, and q2 to reflect the model and GPD chosen by the user
-   * @param event 
+   * @param event When the user changes the model or the GPD
    */
   function handleModelGpd(event: BaseSyntheticEvent) {
     //Updates option values for t
@@ -109,7 +118,7 @@ function Home() {
   /**
    * handleT is called whenever the user makes a change to the t dropdown
    * The function will update xbj and q2 values based on the t value selected
-   * @param event 
+   * @param event When the user changes the t selected
    */
   function handleT(event: BaseSyntheticEvent) {
     //Updates option values for t
@@ -127,15 +136,33 @@ function Home() {
       });
   }
 
+  /**
+   * handleXbj() updates T and Q2 options based on the Xbj that was
+   * selected by the user. It uses modXbj which calls an API to get these
+   * values.
+   * @param event When the user changes the Xbj selected
+   */
   function handleXbj(event: BaseSyntheticEvent) {
+    //Setting the options
     setOptionValues(event.target.name, event.target.value);
+    //Call API to get new T and Q2 values
     modXbj(getModelName(options.model), options.gpd, options.xbj)
       .then((data) => {
         setT(data.t);
+        //Sets Q2 Range
         setQ2(`(${data.q2MinMax[0]} to ${data.q2MinMax[1]})`);
       });
   }
 
+  /**
+   * handleSubmit() runs when the user clicks the plot button. The function
+   * gets the tab currently selected by the user. Then, handleSubmit() gets the data
+   * using the getData() function. The returned value will then be added to the apiData
+   * state. Finally, using apiData, the function will call the addPlot() function which will
+   * add a plot to the tab selected.
+   * @param event When the user clicks the plot button
+   * @returns void to stop execution if there is an error
+   */
   function handleSubmit(event: BaseSyntheticEvent) {
     //Prevents page from reloading
     event.preventDefault();
@@ -145,22 +172,19 @@ function Home() {
     if (tabSelected == null) {
       return;
     } else if (tabSelected === apiData.length) {
-      let addTabData = apiData;
+      //This runs if there needs to be another array to hold data for another tab
+      let addTabData = apiData.slice();
       addTabData.push([]);
+      setApiData(addTabData);
     }
+    //Show loading spinner
     setShowSpinner(true);
 
-    const baseURL = "http://localhost:5000/";
-    let model = getModelName(options.model);
-    let url = `${baseURL}api/${model}/${options.gpd}/${options.xbj}/${options.t}/${options.q2}`;
-    if (options.t === -1 || options.t === -2) {
-      url = `${baseURL}api/${model}/${options.gpd}/${options.xbj}/${options.t.toFixed(1)}/${options.q2}`;
-    }
-
-    fetch(url)
+    getData(options.model, options.gpd, options.xbj, options.t, options.q2)
       .then((response) => response.json())
       .then((data) => {
-        let updatedData = apiData;
+        let updatedData = apiData.slice();
+        //Add the data to the index of the tab that was selected
         updatedData[tabSelected].push(data);
         setApiData(updatedData);
         addPlot(tabSelected);
@@ -172,11 +196,23 @@ function Home() {
       });
   }
 
+  /**
+   * Adds a new plot to the selected tab. If the tab already has a plot on it, the
+   * addPlot function will graph overtop of the original plot 
+   * @param tabSelected 
+   */
   function addPlot(tabSelected: number) {
     createPlot(tabSelected, apiData[tabSelected]);
     setShowSpinner(false);
   }
 
+  /**
+   * handleDownload() generates a csv for the user to download when
+   * the user clicks the Download button on the UI. The download function
+   * uses getData() like the handleSubmit() function, except it does not 
+   * add the data to apiData and instead adds it to downloadData instead.
+   * 
+   */
   function handleDownload() {
     setShowSpinner(true);
     getData(options.model, options.gpd, options.xbj, options.t, options.q2)
