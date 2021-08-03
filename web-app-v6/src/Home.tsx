@@ -190,7 +190,10 @@ function Home() {
         setShowSpinner(false);
         showDownloadLink(false);
       })
-      .catch(() => showError("Error: Data not found"));
+      .catch(() => {
+        showError("Error: Data not found");
+        setShowSpinner(false);
+      });
   }
 
 
