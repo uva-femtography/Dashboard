@@ -34,7 +34,10 @@ export type DataPoint = {
   xd: number;
 };
 
-export type APIData = Array<DataPoint>;
+export type APIData = {
+  data: Array<DataPoint>;
+  options: {xbj: number, t: number, q2: number};
+};
 
 function Home() {
   //Options
@@ -173,9 +176,7 @@ function Home() {
       return;
     } else if (tabSelected === apiData.length) {
       //This runs if there needs to be another array to hold data for another tab
-      let addTabData = apiData.slice();
-      addTabData.push([]);
-      setApiData(addTabData);
+      apiData.push([]);
     }
     //Show loading spinner
     setShowSpinner(true);
@@ -183,12 +184,17 @@ function Home() {
     getData(options.model, options.gpd, options.xbj, options.t, options.q2)
       .then((data) => {
         let updatedData = apiData.slice();
+        let newData : APIData = {
+          data: data,
+          options: {xbj: options.xbj, t: options.t, q2: options.q2},
+        };
         //Add the data to the index of the tab that was selected
-        updatedData[tabSelected].push(data);
+        updatedData[tabSelected].push(newData);
         setApiData(updatedData);
         addPlot(tabSelected);
       })
       .catch((error) => {
+        console.log(error);
         showError("Error: Data not found");
         setShowSpinner(false);
         return;
