@@ -36,7 +36,7 @@ export type DataPoint = {
 
 export type APIData = {
   data: Array<DataPoint>;
-  options: {xbj: number, t: number, q2: number};
+  options: { xbj: number, t: number, q2: number };
 };
 
 function Home() {
@@ -84,8 +84,8 @@ function Home() {
    * This function is used for the q2 form fields. It updates the state with
    * the name of the field and the respective user input.
    */
-  function handleQ2(event: BaseSyntheticEvent) {
-    setOptionValues(event.target.name, event.target.value);
+  function handleQ2(value: number, valueAsString: string) {
+    setOptionValues("q2", value.toString());
   }
 
   /**
@@ -135,7 +135,10 @@ function Home() {
     modT(getModelName(options.model), options.gpd, options.t)
       .then((data) => {
         setXbj(data.xbj);
-        setQ2(`(${data.q2MinMax[0]} to ${data.q2MinMax[1]})`)
+        if (options.xbj > data.xbj[0]) {
+          options.xbj = data.xbj[0];
+        }
+        setQ2(`${data.q2MinMax[0]} to ${data.q2MinMax[1]}`)
       });
   }
 
@@ -152,8 +155,11 @@ function Home() {
     modXbj(getModelName(options.model), options.gpd, options.xbj)
       .then((data) => {
         setT(data.t);
+        if (options.t > data.t[0]) {
+          options.t = data.t[0];
+        }
         //Sets Q2 Range
-        setQ2(`(${data.q2MinMax[0]} to ${data.q2MinMax[1]})`);
+        setQ2(`${data.q2MinMax[0]} to ${data.q2MinMax[1]}`);
       });
   }
 
@@ -184,9 +190,9 @@ function Home() {
     getData(options.model, options.gpd, options.xbj, options.t, options.q2)
       .then((data) => {
         let updatedData = apiData.slice();
-        let newData : APIData = {
+        let newData: APIData = {
           data: data,
-          options: {xbj: options.xbj, t: options.t, q2: options.q2},
+          options: { xbj: options.xbj, t: options.t, q2: options.q2 },
         };
         //Add the data to the index of the tab that was selected
         updatedData[tabSelected].push(newData);
@@ -237,6 +243,27 @@ function Home() {
       });
   }
 
+  /**
+   * The state variable q2 is a string that serves to 
+   * tell the user the minimum and maximum values of q2 that they can enter
+   * into the form. The function below uses this string and converts it
+   * into an array of numbers, allowing it to be passed in as props for 
+   * the min and max of the numeric input.
+   * @returns An array of numbers, with element 0 as the min and element 1 as the max
+   */
+
+  function getQ2Range() {
+    if (q2 !== "") {
+      //Creates an array where each word is an element
+      //Should be in the form of ["<Q2 Min>", "to", "<Q2 Max>"]
+      let minMax = q2.split(" ");
+      return [parseFloat(minMax[0]), parseFloat(minMax[2])];
+    }
+    else {
+      //If q2 is empty
+      return [undefined, undefined];
+    }
+  }
 
 
   useEffect(() => {
@@ -288,6 +315,7 @@ function Home() {
                   options={t}
                   name="t"
                   onChange={handleT}
+                  value={t[0]}
                   required
                 />
               </FormGroup>
@@ -297,7 +325,9 @@ function Home() {
                   stepSize={0.1}
                   name="q2"
                   placeholder="Input a number"
-                  onChange={handleQ2}
+                  onValueChange={handleQ2}
+                  min={getQ2Range()[0]}
+                  max={getQ2Range()[1]}
                   required
                 />
               </FormGroup>

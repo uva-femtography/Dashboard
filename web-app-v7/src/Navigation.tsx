@@ -1,6 +1,7 @@
 import { Navbar, Alignment, Button, Drawer } from "@blueprintjs/core";
 import { useState } from 'react';
-import Instructions from './Instructions';
+//import Instructions from './Instructions';
+import Help from './Help';
 
 function Navigation() {
 
@@ -37,7 +38,7 @@ function Navigation() {
                     isCloseButtonShown
                     canOutsideClickClose
                 >
-                    <Instructions />
+                    <Help />
                 </Drawer>
             </div>
         </div>
