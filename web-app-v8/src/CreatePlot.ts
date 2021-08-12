@@ -1,3 +1,4 @@
+import { elementIsOrContains } from '@blueprintjs/core/lib/esm/common/utils';
 import Plotly from 'plotly.js';
 import { Data } from 'plotly.js';
 import { APIData } from './Home';
@@ -5,13 +6,14 @@ import { APIData } from './Home';
 let width = 0;
 let height = 0;
 
-window.onload = () =>{
+window.onload = () => {
   width = document.getElementsByClassName("flexlayout__tab")[0].clientWidth - 5;
   height = document.getElementsByClassName("flexlayout__tab")[0].clientHeight - 5;
 }
 
 
 export default function createPlot(index: number, points: Array<APIData>) {
+
 
   let data: Data[] = [];
   //Gets the height and width of each of the tabs

@@ -80,9 +80,7 @@ function Results() {
     else {
       let id = node.getId();
       let i = parseInt(id.charAt(id.length - 1));
-      //data = {data[i]}
-      //return <Table data={data[i]} />;
-      return <div id={`results-${i}`}></div>;
+      return <div id={`results-${i}`} ></div>;
     }
   }
 
@@ -98,7 +96,7 @@ function Results() {
 
   return (
     <div className="results">
-      <FlexLayout.Layout model={config} factory={factory} onAction={getSelectedTab} />
+      <FlexLayout.Layout model={config} factory={factory} onAction={getSelectedTab} supportsPopout />
       <Button icon="add" className="bp3-minimal bp3-small" id="new-window" onClick={handleButtonClick} />
     </div>
   );
