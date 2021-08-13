@@ -142,7 +142,6 @@ export async function getData(model: string, gpd: string, xbj: number, t: number
     if(t === -1 || t === -2){
         url = `${baseUrl}api/${modelName}/${gpd}/${xbj}/${t.toFixed(1)}/${q2}`;
     }
-    console.log(url);
     let response = await fetch(url);
     if(response.ok){
         return response.json();

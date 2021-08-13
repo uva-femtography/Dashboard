@@ -135,7 +135,7 @@ function Home() {
     modT(getModelName(options.model), options.gpd, options.t)
       .then((data) => {
         setXbj(data.xbj);
-        if (options.xbj > data.xbj[0]) {
+        if (options.xbj < data.xbj[0]) {
           options.xbj = data.xbj[0];
         }
         setQ2(`${data.q2MinMax[0]} to ${data.q2MinMax[1]}`)
@@ -155,7 +155,7 @@ function Home() {
     modXbj(getModelName(options.model), options.gpd, options.xbj)
       .then((data) => {
         setT(data.t);
-        if (options.t > data.t[0]) {
+        if (options.t < data.t[0]) {
           options.t = data.t[0];
         }
         //Sets Q2 Range
@@ -315,7 +315,6 @@ function Home() {
                   options={t}
                   name="t"
                   onChange={handleT}
-                  value={t[0]}
                   required
                 />
               </FormGroup>
