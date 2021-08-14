@@ -47,20 +47,21 @@ hr{
   position: relative;
 }
 
-.form{
-  flex: 1;
-}
 
 .container{
   display: flex;
 }
 
 .results{
-  flex: 3.40;
-  margin-left: 10px;
+  flex: 1;
+  height: 70vh;
   box-shadow: 0 0 0 1px rgb(16 22 26 / 15%), 0 0 0 rgb(16 22 26 / 0%), 0 0 0 rgb(16 22 26 / 0%);
   border-radius: 3px;
   position: relative;
+}
+
+button#open{
+  margin-bottom: 10px;
 }
 
 .instructions{
@@ -77,6 +78,7 @@ hr{
 
 .form{
   flex: 1;
+  margin: 20px;
 }
 
 .bp3-spinner{
@@ -113,4 +115,16 @@ hr{
 
 .model-info{
   margin-top: 30px;
+}
+
+.results-tab{
+  height: 65vh;
+}
+
+.plot-text{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12pt;
+  height: 65vh;
 }
