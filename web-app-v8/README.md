@@ -18,4 +18,4 @@ You can run the app in your browser using the following command.
 
 `npm run start`
 
-The application should spawn inyour browser on a seperate node.
+The application should spawn in your browser on a seperate node.
