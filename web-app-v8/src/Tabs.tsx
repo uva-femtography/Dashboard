@@ -1,10 +1,10 @@
 import Results from "./Results";
 import { Button, Drawer, DrawerSize, Position } from '@blueprintjs/core';
 import { useState } from 'react';
-import Options from "./Options";
+import Options from './Options';
 
 
-function Tabs() {
+function Home() {
   const [isOptionsOpen, setIsOptionsOpen] = useState(false);
 
   function open() {
@@ -42,4 +42,4 @@ function Tabs() {
 
 }
 
-export default Tabs;
+export default Home;

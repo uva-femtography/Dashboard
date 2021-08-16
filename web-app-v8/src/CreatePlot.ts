@@ -1,7 +1,6 @@
-import { elementIsOrContains } from '@blueprintjs/core/lib/esm/common/utils';
 import Plotly from 'plotly.js';
 import { Data } from 'plotly.js';
-import { APIData } from './Home';
+import { APIData } from './Options';
 
 let width = 0;
 let height = 0;

@@ -1,6 +1,5 @@
 import { BaseSyntheticEvent, useState } from "react";
 import {
-    Card,
     FormGroup,
     HTMLSelect,
     NumericInput,
@@ -13,6 +12,7 @@ import modModel, { modT, modXbj, getModelName, getData } from "./ModOptions";
 import { getTabSelected, showError } from "./ManageTab";
 import { useEffect } from "react";
 import { CSVLink } from "react-csv";
+
 
 export interface Options {
     //Line 6 allows for strings to be used as indexes
@@ -207,6 +207,14 @@ function Options() {
             });
     }
 
+    /**
+     * Helper function to add more arrays to apiData when
+     * the Plot button is clicked. The helper function adds new
+     * arrays for new tabs that are created
+     * @param current The current number of arrays within apiData
+     * @param target The target amount of arrays corresponding to the number of tabs
+     */
+
     function createArrays(current: number, target: number){
         let amount = target - current;
         for(let i = 0; i < amount; i++){
@@ -274,7 +282,7 @@ function Options() {
 
 
     useEffect(() => {
-        modModel("fake", "GPD_E").then((data) => {
+        modModel("bkm", "GPD_E").then((data) => {
             setXbj(data.xbj);
             setT(data.t);
         });
