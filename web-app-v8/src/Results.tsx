@@ -1,7 +1,6 @@
 import FlexLayout, { TabNode, Model, Action, DockLocation, IJsonModel } from "flexlayout-react";
 import "flexlayout-react/style/light.css";
 import Instructions from "./Instructions";
-import { APIData } from "./Home";
 import { Button } from "@blueprintjs/core";
 import { useState } from "react";
 

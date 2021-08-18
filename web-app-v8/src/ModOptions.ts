@@ -31,7 +31,7 @@ export type OptionConfig = {
     q2MinMax: number[];
 }
 
-const baseUrl = "http://localhost:5000/";
+const baseUrl = "http://femtography.uvadcos.io/";
 
 /**
  * Fetches data to the API to get new options once the user
@@ -132,7 +132,7 @@ function getXbjMinMax(data: ModelData) {
 
 export function getModelName(model: string): string {
     if (model === "BKM Model")
-        return "fake";
+        return "bkm";
     return "uva";
 }
 

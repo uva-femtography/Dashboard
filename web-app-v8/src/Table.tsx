@@ -1,4 +1,4 @@
-import { DataPoint } from './Home';
+import { DataPoint } from './Options';
 import 'flexlayout-react/style/light.css';
 
 type TableProps = {

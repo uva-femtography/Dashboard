@@ -1,5 +1,4 @@
 import Navigation from './Navigation';
-import Home from './Home';
 import Tabs from './Tabs';
 
 function App() {
