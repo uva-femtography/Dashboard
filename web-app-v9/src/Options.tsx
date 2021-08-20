@@ -92,6 +92,7 @@ function Options() {
      * graphed in one tab.
      */
     const [apiData, setApiData] = useState<APIData[][]>([[]]);
+    
 
     /**
      * 
@@ -278,17 +279,16 @@ function Options() {
     function handleSubmitV2(event: BaseSyntheticEvent) {
         //Prevents page from reloading
         event.preventDefault();
-        
-        console.log(apiData);
 
         //If tab selected was invalid, stop executing
         const tabSelected = getTabSelected();
-        if (tabSelected == null) {
+        if (tabSelected === null) {
             return;
         } else if (tabSelected >= apiData.length) {
             //This runs if there needs to be another array to hold data for another tab
             createArrays(apiData.length, tabSelected + 1);
         }
+
         //Show loading spinner
         setShowSpinner(true);
 
@@ -306,6 +306,7 @@ function Options() {
                     //Add the data to the index of the tab that was selected
                     apiData[tabSelected].push(newData);
                 }
+                localStorage.setItem("data", JSON.stringify(apiData));
                 addPlot(tabSelected);
             })
             .catch((error) => {
@@ -314,9 +315,7 @@ function Options() {
                 setShowSpinner(false);
                 return;
             });
-
     }
-
 
 
 
@@ -399,6 +398,11 @@ function Options() {
             setXbj(data.xbj);
             setT(data.t);
         });
+        let rawData = localStorage.getItem("data");
+        //setState is asynchronous that's why this isn't working
+        if(rawData !== null){
+            setApiData(JSON.parse(rawData));
+        }
     }, [])
 
     return (

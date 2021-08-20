@@ -8,6 +8,8 @@ let height = 0;
 window.onload = () => {
   width = document.getElementsByClassName("flexlayout__tab")[0].clientWidth - 5;
   height = document.getElementsByClassName("flexlayout__tab")[0].clientHeight - 5;
+  localStorage.removeItem('data');
+
 }
 
 
