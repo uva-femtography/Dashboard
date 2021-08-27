@@ -1,0 +1,58 @@
+{
+  "name": "test-app",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@blueprintjs/docs-theme": "^3.9.9",
+    "@testing-library/jest-dom": "^5.11.4",
+    "@testing-library/react": "^11.1.0",
+    "@testing-library/user-event": "^12.1.10",
+    "@types/jest": "^26.0.22",
+    "@types/node": "^14.14.37",
+    "@types/react": "^17.0.3",
+    "@types/react-dom": "^17.0.3",
+    "concurrently": "^6.0.0",
+    "cross-env": "^7.0.3",
+    "electron": "^12.0.2",
+    "plotly.js": "^1.58.4",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-scripts": "4.0.3",
+    "typescript": "^4.2.3",
+    "wait-on": "^5.3.0",
+    "web-vitals": "^1.0.1"
+  },
+  "homepage": "./",
+  "main": "build/electron/main.js",
+  "scripts": {
+    "build": "react-scripts build",
+    "eject": "react-scripts eject",
+    "lint": "eslint ./src --ext \".js,.jsx,.ts,.tsx\" && stylelint \"./src/**/*.css\"",
+    "lint:fix": "eslint ./src --ext \".js,.jsx,.ts,.tsx\" --fix && stylelint \"./src/**/*.css\" --fix",
+    "start": "concurrently \"cross-env BROWSER=none yarn start-react\" \"wait-on http://localhost:3000 && electron .\"",
+    "test": "react-scripts test",
+    "build-electron": "tsc --project electron/tsconfig.json",
+    "watch-electron": "tsc --watch --project electron/tsconfig.json",
+    "start-react": "cross-env BROWSER=none react-scripts start",
+    "build-all-dev": "npm run build && npm run build-electron && npm run start",
+    "dist": "npm run build && npm run build-electron && electron-builder build -c.extraMetadata.main=build/electron/main.js"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
