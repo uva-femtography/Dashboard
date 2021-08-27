@@ -138,10 +138,8 @@ export function getModelName(model: string): string {
 
 export async function getData(model: string, gpd: string, xbj: number, t: number, q2: number){
     let modelName = getModelName(model);
-    let url = `${baseUrl}api/${modelName}/${gpd}/${xbj}/${t}/${q2}`;
-    if(t === -1 || t === -2){
-        url = `${baseUrl}api/${modelName}/${gpd}/${xbj}/${t.toFixed(1)}/${q2}`;
-    }
+    let url = `${baseUrl}api/${modelName}/${gpd}/${xbj}/${toFloat(t)}/${toFloat(q2)}`;
+    
     let response = await fetch(url);
     if(response.ok){
         return response.json();
@@ -149,6 +147,30 @@ export async function getData(model: string, gpd: string, xbj: number, t: number
     return Promise.reject(response);
 
 }
+
+/**
+ * Helper function required because the API takes in floats
+ * as inputs, not integers. This converts an integer input into 
+ * a float if necessary. Note that the parameters can be both a number and a string
+ * because Javascript interprets dropdown inputs as strings, but Typescript as numbers.
+ * @param num The number to convert
+ * @returns The original number if no conversion needed, a float if the input is an int
+ */
+
+function toFloat(num: number | string){
+    let float: number = 0;
+    //At runtime, Javascript interprets q2 and t values as strings
+    if(typeof num === "string"){
+        //If the input is an integer, convert into float
+        float = Number.parseFloat(num);
+        if(float === Number.parseInt(num)){
+            //If it is an integer, add .0 to it for the API
+            return float.toFixed(1);
+        }
+        return float;
+    }
+}
+
 
 export async function getMultiData(model: string, gpd: string[], xbj: number, t: number, q2: number){
     let multiData = [];
