@@ -7,13 +7,11 @@ import {
     ButtonGroup,
     Spinner,
 } from "@blueprintjs/core";
-import createPlot, { createPlotV2 } from "./CreatePlot";
 import modModel, { modT, modXbj, getModelName, getData, } from "./ModOptions";
 import { getTabSelected, showError } from "./ManageTab";
 import { useEffect } from "react";
 import { CSVLink } from "react-csv";
 import { extractVar } from "./ModOptions";
-/*ADD IN PLOTCONFIG Later*/
 import PlotConfig from "./PlotConfig";
 
 
@@ -27,23 +25,6 @@ export interface Options {
     q2: number;
 }
 
-export type DataPoint = {
-    [key: string]: number;
-    x: number;
-    u: number;
-    d: number;
-    xu: number;
-    xd: number;
-};
-
-export type APIData = {
-    data: Array<DataPoint>;
-    options: { gpd: string, xbj: number, t: number, q2: number };
-};
-
-/**
- * NOTE: Point and 
- */
 export type Point = {
     [key: string]: any;
 }
@@ -80,9 +61,8 @@ function Options() {
      * Each element of the outermost array represent the data that is meant to be 
      * graphed in one tab.
      */
-    const [apiData, setApiData] = useState<APIData[][]>([[]]);
 
-    const [apiDataV2, setApiDataV2] = useState<APIPoints[][]>([[]]);
+    const [apiData, setApiData] = useState<APIPoints[][]>([[]]);
 
 
     /**
@@ -211,46 +191,8 @@ function Options() {
 
         getData(options.model, options.gpd, options.xbj, options.t, options.q2)
             .then((data) => {
-                //console.log(extractVar(data));
-                let updatedData = apiData.slice();
-                let newData: APIData = {
-                    data: data,
-                    options: { gpd: options.gpd, xbj: options.xbj, t: options.t, q2: options.q2 },
-                };
-                //Add the data to the index of the tab that was selected
-                updatedData[tabSelected].push(newData);
-                setApiData(updatedData);
-                localStorage.setItem("data", JSON.stringify(apiData));
-                //addPlot(tabSelected);
-                showPlotConfig(true);
-            })
-            .catch((error) => {
-                console.log(error);
-                showError("Error: Data not found");
-                setShowSpinner(false);
-                return;
-            });
-    }
-
-    function handleSubmitV2(event: BaseSyntheticEvent) {
-        //Prevents page from reloading
-        event.preventDefault();
-
-        //If tab selected was invalid, stop executing
-        const tabSelected = getTabSelected();
-        if (tabSelected == null) {
-            return;
-        } else if (tabSelected >= apiDataV2.length) {
-            //This runs if there needs to be another array to hold data for another tab
-            createArrays(apiDataV2.length, tabSelected + 1);
-        }
-        //Show loading spinner
-        setShowSpinner(true);
-
-        getData(options.model, options.gpd, options.xbj, options.t, options.q2)
-            .then((data) => {
                 setGPDList(extractVar(data));
-                let updatedData = apiDataV2.slice(); //Make a copy of current apiData
+                let updatedData = apiData.slice(); //Make a copy of current apiData
                 
                 let newData: APIPoints = {
                     data: data,
@@ -259,7 +201,7 @@ function Options() {
 
                 //Add the data to the index of the tab that was selected
                 updatedData[tabSelected].push(newData);
-                setApiDataV2(updatedData);
+                setApiData(updatedData);
                 localStorage.setItem("data", JSON.stringify(apiData));
                 
                 showPlotConfig(true);
@@ -285,7 +227,7 @@ function Options() {
     function createArrays(current: number, target: number) {
         let amount = target - current;
         for (let i = 0; i < amount; i++) {
-            apiDataV2.push([])
+            apiData.push([])
         }
     }
 
@@ -412,7 +354,7 @@ function Options() {
                         type="submit"
                         icon={"series-configuration"}
                         text="Plot"
-                        onClick={handleSubmitV2}
+                        onClick={handleSubmit}
                     />
 
                     {!downloadLink && <Button icon={"download"} text="Download" onClick={handleDownload} />}
@@ -424,7 +366,7 @@ function Options() {
             </form>
             }
 
-            {plotConfig && <PlotConfig data={apiDataV2} optionList={gpdList} />}
+            {plotConfig && <PlotConfig data={apiData} optionList={gpdList} />}
 
 
 

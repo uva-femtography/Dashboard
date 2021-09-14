@@ -3,7 +3,7 @@ import { FormGroup, Button } from "@blueprintjs/core";
 import { useState } from "react";
 import { getTabSelected } from "./ManageTab";
 import { APIPoints } from "./Options";
-import { createPlotV2 } from "./CreatePlot";
+import { createPlot } from "./CreatePlot";
 
 type PlotConfigProps = {
     optionList: string[];
@@ -52,7 +52,7 @@ function PlotConfig({optionList, data}: PlotConfigProps) {
      function addPlot() {
         let tabSelected = getTabSelected();
         if(tabSelected != null){
-            createPlotV2(tabSelected, data[tabSelected], selected);
+            createPlot(tabSelected, data[tabSelected], selected);
         }
     }
 
