@@ -1,0 +1,3 @@
+[submodule "femtonet-api"]
+	path = femtonet-api
+	url = https://github.com/uva-femtography/femtonet-api.git
