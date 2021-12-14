@@ -7,11 +7,12 @@ import {
     ButtonGroup,
     Spinner,
 } from "@blueprintjs/core";
-import createPlot from "./CreatePlot";
-import modModel, { modT, modXbj, getModelName, getData } from "./ModOptions";
+import modModel, { modT, modXbj, getModelName, getData, } from "./ModOptions";
 import { getTabSelected, showError } from "./ManageTab";
 import { useEffect } from "react";
 import { CSVLink } from "react-csv";
+import { extractVar } from "./ModOptions";
+import PlotConfig from "./PlotConfig";
 
 
 export interface Options {
@@ -24,6 +25,10 @@ export interface Options {
     q2: number;
 }
 
+export type Point = {
+    [key: string]: any;
+}
+
 export type DataPoint = {
     [key: string]: number;
     x: number;
@@ -33,10 +38,10 @@ export type DataPoint = {
     xd: number;
 };
 
-export type APIData = {
-    data: Array<DataPoint>;
+export type APIPoints = {
+    data: Array<Point>;
     options: { xbj: number, t: number, q2: number };
-};
+}
 
 function Options() {
     //Options
@@ -65,7 +70,9 @@ function Options() {
      * Each element of the outermost array represent the data that is meant to be 
      * graphed in one tab.
      */
-    const [apiData, setApiData] = useState<APIData[][]>([[]]);
+
+    const [apiData, setApiData] = useState<APIPoints[][]>([[]]);
+
 
     /**
      * 
@@ -78,6 +85,11 @@ function Options() {
 
     //Whether to show the spinner or not
     const [showSpinner, setShowSpinner] = useState(false);
+
+    //Choosing which variables to plot
+    const [plotConfig, showPlotConfig] = useState(false);
+    //List of variable options for plot
+    const [gpdList, setGPDList] = useState<string[]>([]);
 
     /**
      * This function is used for the q2 form fields. It updates the state with
@@ -156,7 +168,6 @@ function Options() {
                 setT(data.t);
                 if (options.t > data.t[0]) {
                     options.t = data.t[0];
-                    console.log(options.t)
                 }
                 //Sets Q2 Range
                 setQ2(`${data.q2MinMax[0]} to ${data.q2MinMax[1]}`);
@@ -189,15 +200,21 @@ function Options() {
 
         getData(options.model, options.gpd, options.xbj, options.t, options.q2)
             .then((data) => {
-                let updatedData = apiData.slice();
-                let newData: APIData = {
+                setGPDList(extractVar(data));
+                let updatedData = apiData.slice(); //Make a copy of current apiData
+                
+                let newData: APIPoints = {
                     data: data,
                     options: { xbj: options.xbj, t: options.t, q2: options.q2 },
                 };
+
                 //Add the data to the index of the tab that was selected
                 updatedData[tabSelected].push(newData);
                 setApiData(updatedData);
-                addPlot(tabSelected);
+                localStorage.setItem("data", JSON.stringify(apiData));
+                
+                showPlotConfig(true);
+                setShowSpinner(false);
             })
             .catch((error) => {
                 console.log(error);
@@ -207,6 +224,7 @@ function Options() {
             });
     }
 
+
     /**
      * Helper function to add more arrays to apiData when
      * the Plot button is clicked. The helper function adds new
@@ -215,21 +233,11 @@ function Options() {
      * @param target The target amount of arrays corresponding to the number of tabs
      */
 
-    function createArrays(current: number, target: number){
+    function createArrays(current: number, target: number) {
         let amount = target - current;
-        for(let i = 0; i < amount; i++){
+        for (let i = 0; i < amount; i++) {
             apiData.push([])
         }
-    }
-
-    /**
-     * Adds a new plot to the selected tab. If the tab already has a plot on it, the
-     * addPlot function will graph overtop of the original plot 
-     * @param tabSelected 
-     */
-    function addPlot(tabSelected: number) {
-        createPlot(tabSelected, apiData[tabSelected]);
-        setShowSpinner(false);
     }
 
     /**
@@ -257,6 +265,8 @@ function Options() {
                 setShowSpinner(false);
             });
     }
+
+
 
     /**
      * The state variable q2 is a string that serves to 
@@ -286,11 +296,16 @@ function Options() {
             setXbj(data.xbj);
             setT(data.t);
         });
+        let rawData = localStorage.getItem("data");
+        if (rawData !== null) {
+            setApiData(JSON.parse(rawData));
+        }
     }, [])
 
     return (
         <div className="form">
-            <form>
+
+            {!plotConfig && <form>
                 <FormGroup label="Select GPD:" labelFor="GPD">
                     <HTMLSelect
                         options={gpdOptions}
@@ -299,6 +314,8 @@ function Options() {
                         required
                     />
                 </FormGroup>
+
+
                 <FormGroup label="Select a model:" labelFor="model">
                     <HTMLSelect
                         options={modelOptions}
@@ -307,6 +324,7 @@ function Options() {
                         required
                     />
                 </FormGroup>
+
 
                 <h2>Kinematic Parameters</h2>
 
@@ -355,6 +373,14 @@ function Options() {
                     {showSpinner && <Spinner size={20} />}
                 </ButtonGroup>
             </form>
+            }
+
+            {plotConfig && <PlotConfig data={apiData} optionList={gpdList} />}
+
+
+
+
+
         </div>
     );
 }

@@ -1,11 +1,11 @@
 import Navigation from './Navigation';
-import Tabs from './Tabs';
+import Home from './Home';
 
 function App() {
   return (
     <div className="App">
       <Navigation />
-      <Tabs />
+      <Home />
 
       
     </div>
